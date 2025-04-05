@@ -1,0 +1,4 @@
+name = "ShortTermDistributionOperation"
+uuid = "6a5d6156-e9cd-46b0-a677-150f32a3b2d4"
+authors = ["Rodrigo Benoliel <rodrigobenoliel@psr-inc.com>"]
+version = "0.1.0"
