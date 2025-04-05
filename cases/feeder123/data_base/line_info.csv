@@ -1,101 +1,101 @@
-bus_from,bus_to,type,config,capacity_kW
-0,150,circuit,Substation,2250
-150,149,circuit,Reg1+Conf1,2250
-149,1,circuit,config 1,6000
-1,2,circuit,config 1,6000
-2,3,circuit,config 1,6000
-3,4,circuit,config 1,6000
-4,5,circuit,config 1,6000
-5,6,circuit,config 1,6000
-6,7,circuit,config 1,6000
-7,8,circuit,config 1,6000
-8,9,circuit,config 1,6000
-9,14,circuit,Reg2+Conf8,320
-14,15,circuit,config 8,780
-15,16,circuit,config 8,780
-16,17,circuit,config 8,780
-17,18,switch,SW1,780
-13,18,circuit,config 8,780
-9,10,circuit,config 8,780
-10,11,circuit,config 8,780
-11,12,circuit,config 8,780
-12,13,circuit,config 8,780
-149,19,circuit,config 1,6000
-19,20,circuit,config 1,6000
-20,21,circuit,config 1,6000
-21,22,circuit,config 1,6000
-22,23,circuit,config 1,6000
-23,24,circuit,config 1,6000
-24,25,circuit,config 1,6000
-25,26,circuit,Reg3+Conf8,320
-26,27,circuit,config 8,780
-27,28,circuit,config 8,780
-28,29,circuit,config 8,780
-29,30,circuit,config 8,780
-30,31,circuit,config 8,780
-31,32,circuit,config 8,780
-32,33,circuit,config 8,780
-25,34,circuit,config 8,780
-34,35,circuit,config 8,780
-35,36,switch,SW2,780
-36,37,circuit,config 8,780
-37,38,circuit,config 8,780
-38,39,circuit,config 8,780
-39,40,circuit,config 8,780
-40,41,circuit,config 8,780
-41,42,circuit,config 8,780
-42,43,circuit,config 8,780
-43,44,circuit,config 8,780
-44,45,circuit,config 8,780
-45,46,circuit,config 8,780
-149,47,circuit,config 1,6000
-47,48,circuit,config 5,6000
-48,49,circuit,config 5,6000
-49,50,circuit,config 5,6000
-50,51,circuit,config 5,6000
-48,52,circuit,config 9,1170
-52,53,circuit,config 9,1170
-48,54,switch,SW3,6000
-54,55,circuit,config 5,6000
-55,56,circuit,config 5,6000
-56,57,circuit,config 5,6000
-57,58,circuit,config 5,6000
-58,59,circuit,config 5,6000
-59,60,circuit,config 2,6000
-60,61,switch,SW4,6000
-61,62,circuit,config 4,6000
-62,63,circuit,config 4,6000
-63,64,circuit,config 4,6000
-64,65,circuit,config 3,6000
-65,66,circuit,config 4,6000
-61,610,circuit,Xfm-1,135
-60,160,switch,SW6,6000
-160,67,circuit,Reg4+Conf2,1300
-67,68,circuit,config 2,6000
-68,69,circuit,config 2,6000
-69,70,circuit,config 2,6000
-70,71,circuit,config 2,6000
-68,72,circuit,config 7,1460
-72,73,circuit,config 7,1460
-73,74,circuit,config 7,1460
-74,75,circuit,config 7,1460
-60,97,switch,SW5,6000
-97,98,circuit,config 6,1460
-98,99,circuit,config 6,1460
-99,100,circuit,config 6,1460
-100,101,circuit,config 6,1460
-97,101,switch,SW7,1460
-97,197,switch,SW8,1460
-101,102,circuit,config 6,1460
-102,103,circuit,config 6,1460
-103,104,circuit,config 6,1460
-104,105,circuit,config 6,1460
-105,106,circuit,config 10,1490
-106,107,circuit,config 10,1490
-105,108,circuit,config 6,1460
-108,109,circuit,config 6,1460
-109,110,circuit,config 6,1460
-110,111,circuit,config 6,1460
-111,112,circuit,config 6,1460
-112,113,circuit,config 6,1460
-113,114,circuit,config 6,1460
+code,bus_from,bus_to,type,config,capacity_kW
+1,0,150,circuit,Substation,2250
+2,150,149,circuit,Reg1+Conf1,2250
+3,149,1,circuit,config 1,6000
+4,1,2,circuit,config 1,6000
+5,2,3,circuit,config 1,6000
+6,3,4,circuit,config 1,6000
+7,4,5,circuit,config 1,6000
+8,5,6,circuit,config 1,6000
+9,6,7,circuit,config 1,6000
+10,7,8,circuit,config 1,6000
+11,8,9,circuit,config 1,6000
+12,9,14,circuit,Reg2+Conf8,320
+13,14,15,circuit,config 8,780
+14,15,16,circuit,config 8,780
+15,16,17,circuit,config 8,780
+16,17,18,switch,SW1,780
+17,13,18,circuit,config 8,780
+18,9,10,circuit,config 8,780
+19,10,11,circuit,config 8,780
+20,11,12,circuit,config 8,780
+21,12,13,circuit,config 8,780
+22,149,19,circuit,config 1,6000
+23,19,20,circuit,config 1,6000
+24,20,21,circuit,config 1,6000
+25,21,22,circuit,config 1,6000
+26,22,23,circuit,config 1,6000
+27,23,24,circuit,config 1,6000
+28,24,25,circuit,config 1,6000
+29,25,26,circuit,Reg3+Conf8,320
+30,26,27,circuit,config 8,780
+31,27,28,circuit,config 8,780
+32,28,29,circuit,config 8,780
+33,29,30,circuit,config 8,780
+34,30,31,circuit,config 8,780
+35,31,32,circuit,config 8,780
+36,32,33,circuit,config 8,780
+37,25,34,circuit,config 8,780
+38,34,35,circuit,config 8,780
+39,35,36,switch,SW2,780
+40,36,37,circuit,config 8,780
+41,37,38,circuit,config 8,780
+42,38,39,circuit,config 8,780
+43,39,40,circuit,config 8,780
+44,40,41,circuit,config 8,780
+45,41,42,circuit,config 8,780
+46,42,43,circuit,config 8,780
+47,43,44,circuit,config 8,780
+48,44,45,circuit,config 8,780
+49,45,46,circuit,config 8,780
+50,149,47,circuit,config 1,6000
+51,47,48,circuit,config 5,6000
+52,48,49,circuit,config 5,6000
+53,49,50,circuit,config 5,6000
+54,50,51,circuit,config 5,6000
+55,48,52,circuit,config 9,1170
+56,52,53,circuit,config 9,1170
+57,48,54,switch,SW3,6000
+58,54,55,circuit,config 5,6000
+59,55,56,circuit,config 5,6000
+60,56,57,circuit,config 5,6000
+61,57,58,circuit,config 5,6000
+62,58,59,circuit,config 5,6000
+63,59,60,circuit,config 2,6000
+64,60,61,switch,SW4,6000
+65,61,62,circuit,config 4,6000
+66,62,63,circuit,config 4,6000
+67,63,64,circuit,config 4,6000
+68,64,65,circuit,config 3,6000
+69,65,66,circuit,config 4,6000
+70,61,610,circuit,Xfm-1,135
+71,60,160,switch,SW6,6000
+72,160,67,circuit,Reg4+Conf2,1300
+73,67,68,circuit,config 2,6000
+74,68,69,circuit,config 2,6000
+75,69,70,circuit,config 2,6000
+76,70,71,circuit,config 2,6000
+77,68,72,circuit,config 7,1460
+78,72,73,circuit,config 7,1460
+79,73,74,circuit,config 7,1460
+80,74,75,circuit,config 7,1460
+81,60,97,switch,SW5,6000
+82,97,98,circuit,config 6,1460
+83,98,99,circuit,config 6,1460
+84,99,100,circuit,config 6,1460
+85,100,101,circuit,config 6,1460
+86,97,101,switch,SW7,1460
+87,97,197,switch,SW8,1460
+88,101,102,circuit,config 6,1460
+89,102,103,circuit,config 6,1460
+90,103,104,circuit,config 6,1460
+91,104,105,circuit,config 6,1460
+92,105,106,circuit,config 10,1490
+93,106,107,circuit,config 10,1490
+94,105,108,circuit,config 6,1460
+95,108,109,circuit,config 6,1460
+96,109,110,circuit,config 6,1460
+97,110,111,circuit,config 6,1460
+98,111,112,circuit,config 6,1460
+99,112,113,circuit,config 6,1460
+100,113,114,circuit,config 6,1460
