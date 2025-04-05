@@ -1,5 +1,10 @@
 module ShortTermDistributionOperation
 
-greet() = print("Hello World!")
+include("stdoMain.jl")
+include("stdoIO.jl")
+include("stdoClasses.jl")
+include("stdoUtils.jl")
+
+export main
 
 end # module ShortTermDistributionOperation
