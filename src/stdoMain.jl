@@ -4,8 +4,8 @@ function main(casepath::String)
     if !isdir(casepath)
         error("Path not found: $casepath")
     end
-
     
+    STDO = StdoLoadStudy(casepath);
 
     println("STDO SUCCESS!")
     return 0

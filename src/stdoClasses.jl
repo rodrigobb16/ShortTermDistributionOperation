@@ -1,32 +1,39 @@
-mutable struct StdoBus
+mutable struct StdoBuses
     size::Int
-    id::Vector{Int}
-    name::Vector{String}
-    busType::Vector{String}
-    voltage::Vector{Float64}
+    # id::Vector{Int}
+    code::Vector{Int}
+    # name::Vector{String}
+    # busType::Vector{String}
+    # voltage::Vector{Float64}
 end
 
-mutable struct StdoCircuit
+mutable struct StdoCircuits
     size::Int
-    id::Vector{Int}
-    name::Vector{String}
-    busFrom::Vector{StdoBus}
-    busTo::Vector{StdoBus}
-    impedance::Vector{Float64}
+    # id::Vector{Int}
+    code::Vector{Int}
+    # name::Vector{String}
+    busFrom::Vector{Int}
+    busTo::Vector{Int}
+    # impedance::Vector{Float64}
+    type::Vector{String}
+    config::Vector{String}
+    capacity::Vector{Float64}
 end
 
 mutable struct StdoLoads
     size::Int
-    id::Vector{Int}
-    load2bus::Vector{StdoBus}
+    # id::Vector{Int}
+    code::Vector{Int}
+    load2bus::Vector{Int}
     power::Vector{Float64}
 end
 
-mutable struct StdoGenerator
+mutable struct StdoGenerators
     size::Int
-    id::Vector{Int}
-    name::Vector{String}
-    gen2bus::Vector{StdoBus}
+    # id::Vector{Int}
+    code::Vector{Int}
+    # name::Vector{String}
+    gen2bus::Vector{Int}
     power::Vector{Float64}
 end
 
