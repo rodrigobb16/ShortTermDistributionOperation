@@ -18,6 +18,7 @@ mutable struct StdoCircuits
     type::Vector{String}
     config::Vector{String}
     capacity::Vector{Float64}
+    resistance::Vector{Float64}
 end
 
 mutable struct StdoLoads
@@ -38,6 +39,8 @@ mutable struct StdoGenerators
 end
 
 mutable struct StdoStudy
+    basePower::Float64
+    baseVoltage::Float64
     buses::StdoBuses
     circuits::StdoCircuits
     loads::StdoLoads
