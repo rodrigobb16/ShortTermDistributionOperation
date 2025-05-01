@@ -1,0 +1,2 @@
+SET, PATHDATA,D:/Mestrado/Pratica em modelagem matematica/Projeto/ShortTermDistributionOperation/cases/feeder123/sddp/
+RUN, fit_renewables_hourly_nohydro

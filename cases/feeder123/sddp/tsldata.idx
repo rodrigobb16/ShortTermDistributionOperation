@@ -1,0 +1,10 @@
+ids,model,name,unit,active
+1,wind,Wind Speed at Hub Height,m/s,0
+2,wind,Wind Speed after Bias Correction,m/s,0
+3,solar,Global Horizon Irradiation,w/m2,0
+4,solar,Diffuse Irradiation,w/m2,0
+5,solar,Normal Directed Irradiation,w/m2,0
+6,solar,Final Irradiation,w/m2,0
+7,solar,Temperature,ºC,0
+8,dlr,Lowest Hourly Wind Speed,m/s,0
+9,dlr,Highest Hourly Temperature,ºC,0

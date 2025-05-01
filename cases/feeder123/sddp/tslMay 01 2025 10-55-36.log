@@ -1,0 +1,18 @@
+TimeSeries Lab.
+Version 1.607
+------------------------------------------------------------------
+Checking license file
+[C:\PSR\TIMESE~1.1\EXTENS~1\TIMESE~1/../psr.lic]
+License file successfully checked. Licensed user: PSR - Joao Vilela (BERGEN)
+------------------------------------------------------------------
+Working directory:C:\PSR\TimeSeriesLab2.1\Extensions\TimeSeriesLab
+========================================================
+Processing SET
+========================================================
+Processing RUN
+ .running core script [fit_renewables_hourly_nohydro]
+Loading SDDP CASE DATA From D:/Mestrado/Pratica em modelagem matematica/Projeto/ShortTermDistributionOperation/cases/feeder123/sddp/
+Loading hourly GND SERIES from D:/Mestrado/Pratica em modelagem matematica/Projeto/ShortTermDistributionOperation/cases/feeder123/sddp/
+Getting monthly representation
+Checking hourly DLR SERIES from D:/Mestrado/Pratica em modelagem matematica/Projeto/ShortTermDistributionOperation/cases/feeder123/sddp/
+

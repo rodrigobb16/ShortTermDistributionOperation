@@ -1,0 +1,16 @@
+ABREVIATION,VARNAME,VALUE,DESCRIPTION,TYPE
+MDL,MODEL,0,0 := wind; 1 := solar; 2 := both,INTEGER
+COR,WIND_CORRECTION,0,0 := none; 1 := beta binary search; 2 := irena,INTEGER
+CLU,CLUSTER_CHRONOLOGY,0,0 := single CFobs; 1 := monthly CFobs,INTEGER
+GRP,GROUPING_TYPE,1, 0 := candidate; 1 := cluster,INTEGER
+FUT,FUTURE_WIND,0,0 := existing turbines; 1 := future turbines,INTEGER
+IYR,INITIAL_YEAR,2017,,INTEGER
+FYR,FINAL_YEAR,2017,,INTEGER
+TBP,TURB_PATH,C:\PSR\TimeSeriesLab2.1\Extensions\,,STRING
+CTP,CUSTOM_PATH,C:\Users\rodrigobenoliel\AppData\Roaming\PSRRenewablePowerSimulator\,,STRING
+MRP,MERRA_PATH,D:\Mestrado\Pratica em modelagem matematica\Projeto\ShortTermDistributionOperation\cases\feeder123\sddp\,,STRING
+TSM,TURBINE_SMOOTH,0,,INTEGER
+AIR,AIR_DENSITY,0,,INTEGER
+OWC,OUTPUT_EXTRAPOLATED_WIND,0,,INTEGER
+OET,OUTPUT_ESTIMATOR,0,,INTEGER
+UTC,REFERENCE_UTC,-3,,INTEGER

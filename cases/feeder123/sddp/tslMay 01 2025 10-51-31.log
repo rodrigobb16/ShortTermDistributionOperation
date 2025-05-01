@@ -1,0 +1,64 @@
+TSL-Data Console - build: Feb  25 2025 - 17:24
+(c) Copyright - PSR 2025 - All rights reserved
+----------------------------------------------
+Initiating basic settings
+Loading internal data ... Ok
+Getting idPoints data ... 00m:04s Ok.
+Downloading points - source: MERRA2
+ 1 total:
+   Point: 99300 Ok.
+ done 00m:02s.
+Making outputCSV data ... 00m:00s Ok.
+Done.
+
+
+===========================================================
+Time Series Lab - Wind Module [2.2Beta1 - e7367071f]
+Copyright (c) 2023 PSR Consulting. All rights reserverd.
+===========================================================
+Case directory: D:\Mestrado\Pratica em modelagem matematica\Projeto\ShortTermDistributionOperation\cases\feeder123\sddp
+Reading turbine power curves
+Reading Wind Plant's Attributes
+CALCULATE: Wind Power Conversion
+-----------------------------------------------------------
+	Plant: bus85
+	Plant: bus18
+	Station: bus85
+	Station: bus18
+-----------------------------------------------------------
+Finished execution!
+
+
+TSL-Data Console - build: Feb  25 2025 - 17:24
+(c) Copyright - PSR 2025 - All rights reserved
+----------------------------------------------
+Initiating basic settings
+Loading internal data ... Ok
+Getting idPoints data ... 00m:04s Ok.
+Downloading points - source: MERRA2
+ 1 total:
+   Point: 99875 Ok.
+ done 00m:02s.
+Making outputCSV data ... 00m:00s Ok.
+Done.
+
+
+===========================================================
+Time Series Lab - Solar Module [2.2Beta1 - e7367071f]
+===========================================================
+PV Station bus114 : Plant bus114 (1/2)
+PV Station bus60 : Plant bus60 (2/2)
+Finished execution!
+
+
+===========================================================
+CALCULATE: Solar Correction
+
+
+===========================================================
+MERGE: Simulated Historical Data
+MERGE: Wind and Solar Historical Data
+EXPORT: historical data
+
+
+
