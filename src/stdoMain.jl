@@ -19,15 +19,16 @@ function main(casepath::String)
     println("Solving model...")
     circuits_beta0 = [Float64[] for _ in 1:study.circuits.size]
     circuits_beta1 = [Float64[] for _ in 1:study.circuits.size]
-    max_iter = 10
+    max_iter = 15
     iter = 0
+    calc_losses = zeros(study.circuits.size)
     while true
         iter += 1
         println("Iteration $iter...")
         write_to_file(m, "stdo.lp")
         optimize!(m)
         calc_losses = study.circuits.resistance .* (value.(m[:flow]) .^ 2)
-        if all(abs.(calc_losses .- value.(m[:losses])) ./ calc_losses .< 0.01) || iter >= max_iter
+        if all(abs.(calc_losses .- value.(m[:losses])) .< 1e-5) || iter >= max_iter
             break
         end
         
@@ -39,14 +40,11 @@ function main(casepath::String)
             m[:losses][icircuit] >= circuits_beta0[icircuit][end] + circuits_beta1[icircuit][end] * m[:flow][icircuit]
         )
     end
-
-    @show iter
-    @show circuits_beta0
-    @show circuits_beta1
-    @show value.(m[:losses])
     
     println("Model solved successfully!")
     println("Objective value: ", objective_value(m))
+    println("Iteration count: ", iter)
+    println("Losses linearization gap: ", maximum(abs.(calc_losses .- value.(m[:losses]))))
 
     println("STDO SUCCESS!")
     return 0

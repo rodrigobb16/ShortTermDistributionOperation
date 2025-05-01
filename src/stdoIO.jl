@@ -30,7 +30,7 @@ function StdoLoadCircuits(circuits_filepath::String, buses::StdoBuses, base_powe
     type = String.(circuits_input_df.type);
     config = String.(circuits_input_df.config);
     capacity = Float64.(circuits_input_df.capacity_kW) / base_power; # to pu
-    resistance = Float64.(circuits_input_df.resistance_ohm) / base_resisteance; # to pu
+    resistance = Float64.(circuits_input_df.resistance_pu) #/ base_resisteance; # to pu
 
     busFrom = Int[];
     busTo = Int[];
