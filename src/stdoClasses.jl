@@ -38,11 +38,21 @@ mutable struct StdoGenerators
     power::Vector{Float64}
 end
 
+mutable struct StdoRenewable
+    size::Int
+    code::Vector{Int}
+    gen2bus::Vector{Int}
+    power::Vector{Dict{Integer,Vector{Float64}}}
+end
+
 mutable struct StdoStudy
+    scenarios::Int
+    hours::Int
     basePower::Float64
     baseVoltage::Float64
     buses::StdoBuses
     circuits::StdoCircuits
     loads::StdoLoads
     generators::StdoGenerators
+    renewables::StdoRenewable
 end

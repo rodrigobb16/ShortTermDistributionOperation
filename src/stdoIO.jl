@@ -91,6 +91,41 @@ function StdoLoadGenerators(generators_filepath::String, buses::StdoBuses, base_
                           power::Vector{Float64});
 end
 
+function StdoLoadRenewables(renewables_filepath::String, buses::StdoBuses, base_power::Float64, base_voltage::Float64)
+    renewables_input_df = DataFrame(CSV.File(renewables_filepath));
+    renewable_header = names(renewables_input_df);
+
+    size = 0;
+    code = Int[];
+    gen2bus = Int[];
+    power = Vector{Dict{Int, Vector{Float64}}}();
+    scn = 0;
+    hor = 0;
+    if length(renewable_header) > 2
+        scn = maximum(renewables_input_df.scn);
+        hor = maximum(renewables_input_df.hora);
+        code = parse.(Int, renewable_header[3:end]);
+        size = length(code);
+        for i in 1:(length(renewable_header) - 2)
+            gen2bus = push!(gen2bus, findfirst(buses.code .== code[i]));
+
+            power_aux = Dict{Int,Vector{Float64}}();
+            for row in eachrow(renewables_input_df)
+                scn = row.scn;
+                if !haskey(power_aux, scn)
+                    power_aux[scn] = Float64[];
+                end
+                push!(power_aux[scn], row[i + 2] / base_power);
+            end
+            push!(power, power_aux);
+        end
+    end
+
+    return StdoRenewable(size::Int, 
+                         code::Vector{Int}, 
+                         gen2bus::Vector{Int}, 
+                         power::Vector{Dict{Int,Vector{Float64}}}), scn, hor;
+end
 function StdoLoadStudy(casepath::String)
 
     base_power = 1000.0; # kVA
@@ -100,13 +135,16 @@ function StdoLoadStudy(casepath::String)
     circuits = StdoLoadCircuits(joinpath(casepath, "line_info.csv"), buses, base_power, base_resisteance);
     loads = StdoLoadLoads(joinpath(casepath, "load_info.csv"), buses, base_power, base_voltage);
     substations = StdoLoadGenerators(joinpath(casepath, "substation_info.csv"), buses, base_power, base_voltage);
-
+    renewables, scn, hor = StdoLoadRenewables(joinpath(casepath, "GD_info.csv"), buses, base_power, base_voltage);
     return StdoStudy(
+        scn,
+        hor,
         base_power,
         base_voltage,
         buses::StdoBuses,
         circuits::StdoCircuits,
         loads::StdoLoads,
-        substations::StdoGenerators
+        substations::StdoGenerators,
+        renewables::StdoRenewable,
         );
 end
