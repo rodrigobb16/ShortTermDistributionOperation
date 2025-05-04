@@ -2,7 +2,7 @@ function StdoBuildVariables!(m, study::StdoStudy)
     @variable(m, 0 <= losses[1:study.circuits.size,1:study.hours])
     @variable(m, flow[icir=1:study.circuits.size,1:study.hours])
     @variable(m, 0 <= powerSupply[1:study.buses.size,1:study.hours])
-    @variable(m, 0 <= powerConsumption[1:study.buses.size,1:study.hours])
+    @variable(m, powerConsumption[1:study.buses.size,1:study.hours])
     @variable(m, 0 <= deficit[1:study.buses.size,1:study.hours,1:study.scenarios])
 end
 
@@ -36,7 +36,8 @@ function StdoBuildConstraints!(m, study::StdoStudy)
     )
 
     @constraint(m, demand_supply[ibus=1:study.circuits.size, ihour=1:study.hours, iscenario=1:study.scenarios],
-        powerConsumption[ibus,ihour] + deficit[ibus,ihour,iscenario] == sum(study.loads.power[iload] for iload in 1:study.loads.size if study.loads.load2bus[iload] == ibus)
+        powerConsumption[ibus,ihour] + deficit[ibus,ihour,iscenario] == sum(study.loads.power[iload] for iload in 1:study.loads.size if study.loads.load2bus[iload] == ibus) - 
+        sum(study.renewables.power[igenerator][iscenario][ihour] for igenerator in 1:study.renewables.size if study.renewables.gen2bus[igenerator] == ibus)
     )
 
     @constraint(m, max_power_supply[ibus=1:study.buses.size, ihour=1:study.hours],
