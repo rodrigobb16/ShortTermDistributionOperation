@@ -47,5 +47,11 @@ function main(casepath::String)
     println("Losses linearization gap: ", maximum(abs.(calc_losses .- value.(m[:losses]))))
 
     println("STDO SUCCESS!")
+
+    # Save results
+    println("Saving results...")
+    StdoSaveResults(casepath,m, study)
+    println("Results saved successfully!")
+
     return 0
 end
