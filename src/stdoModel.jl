@@ -35,7 +35,7 @@ function StdoBuildConstraints!(m, study::StdoStudy)
         powerSupply[ibus,ihour] - powerConsumption[ibus,ihour] == 0
     )
 
-    @constraint(m, demand_supply[ibus=1:study.circuits.size, ihour=1:study.hours, iscenario=1:study.scenarios],
+    @constraint(m, demand_supply[ibus=1:study.buses.size, ihour=1:study.hours, iscenario=1:study.scenarios],
         powerConsumption[ibus,ihour] + deficit[ibus,ihour,iscenario] == sum(study.loads.power[iload] for iload in 1:study.loads.size if study.loads.load2bus[iload] == ibus) - 
         sum(study.renewables.power[igenerator][iscenario][ihour] for igenerator in 1:study.renewables.size if study.renewables.gen2bus[igenerator] == ibus)
     )
