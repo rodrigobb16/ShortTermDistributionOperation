@@ -46,3 +46,99 @@ Conversion is not necessary
 Status: SUCCESS
 Code: 0
 Total execution time:  0.003 seconds
+-----------------
+SDDP Data updater
+-----------------
+
+Execution date: 2025-07-06 16:10:00
+
+Data path: D:\Mestrado\Pratica em modelagem matematica\Projeto\ShortTermDistributionOperation\cases\feeder123\sddp\
+Create data backup: Yes
+
+*** Initiating database conversion ***
+
+Checking files in data base...
+
+Non-empty files involved in the conversion:
+
+Number of chidro*.dat: 0
+Number of mhidro*.dat: 0
+Number of ror_operative_storage.dat: 0
+
+There are no hydro data base in the case
+Conversion is not necessary
+Status: SUCCESS
+Code: 0
+Total execution time: 0.0065 seconds
+-----------------
+SDDP Data updater
+-----------------
+
+Execution date: 2025-07-06 16:14:17
+
+Data path: D:\Mestrado\Pratica em modelagem matematica\Projeto\ShortTermDistributionOperation\cases\feeder123\sddp\
+Create data backup: Yes
+
+*** Initiating database conversion ***
+
+Checking files in data base...
+
+Non-empty files involved in the conversion:
+
+Number of chidro*.dat: 0
+Number of mhidro*.dat: 0
+Number of ror_operative_storage.dat: 0
+
+There are no hydro data base in the case
+Conversion is not necessary
+Status: SUCCESS
+Code: 0
+Total execution time: 0.0055 seconds
+-----------------
+SDDP Data updater
+-----------------
+
+Execution date: 2025-07-06 16:24:17
+
+Data path: D:\Mestrado\Pratica em modelagem matematica\Projeto\ShortTermDistributionOperation\cases\feeder123\sddp\
+Create data backup: Yes
+
+*** Initiating database conversion ***
+
+Checking files in data base...
+
+Non-empty files involved in the conversion:
+
+Number of chidro*.dat: 0
+Number of mhidro*.dat: 0
+Number of ror_operative_storage.dat: 0
+
+There are no hydro data base in the case
+Conversion is not necessary
+Status: SUCCESS
+Code: 0
+Total execution time: 0.0049 seconds
+-----------------
+SDDP Data updater
+-----------------
+
+Execution date: 2025-07-06 16:29:27
+
+Data path: D:\Mestrado\Pratica em modelagem matematica\Projeto\ShortTermDistributionOperation\cases\feeder123\sddp\
+Create data backup: Yes
+
+*** Initiating database conversion ***
+
+Checking files in data base...
+
+Non-empty files involved in the conversion:
+
+Number of chidro*.dat: 0
+Number of mhidro*.dat: 0
+Number of ror_operative_storage.dat: 0
+
+There are no hydro data base in the case
+Conversion is not necessary
+Status: SUCCESS
+Code: 0
+Total execution time:  0.003 seconds
