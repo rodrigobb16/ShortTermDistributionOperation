@@ -21,33 +21,44 @@ function main(casepath::String)
     losses = m[:losses]    
 
     max_iter = 15
-    calc_losses = zeros(study.circuits.size)
+    calc_losses = zeros(study.circuits.size, study.scenarios)
     for hour in 1:study.hours
         println("Hour $hour...")
-        circuits_beta0 = [Float64[] for _ in 1:study.circuits.size]
-        circuits_beta1 = [Float64[] for _ in 1:study.circuits.size]
+        circuits_beta0 = [[Float64[] for _ in 1:study.scenarios] for _ in 1:study.circuits.size]
+        circuits_beta1 = [[Float64[] for _ in 1:study.scenarios] for _ in 1:study.circuits.size]
         iter = 0
         while true
             iter += 1
             println("Iteration $iter...")
             write_to_file(m, "stdo.lp")
             optimize!(m)
-            calc_losses = study.circuits.resistance .* (value.(flow[:,hour]) .^ 2)
-            if all(abs.(calc_losses .- value.(losses[:,hour])) .< 1e-5) || iter >= max_iter
+            
+            # Calculate losses for each scenario
+            max_gap = 0.0
+            for iscenario in 1:study.scenarios
+                calc_losses[:, iscenario] = study.circuits.resistance .* (value.(flow[:,hour,iscenario]) .^ 2)
+                gap = maximum(abs.(calc_losses[:, iscenario] .- value.(losses[:,hour,iscenario])))
+                max_gap = max(max_gap, gap)
+            end
+            
+            if max_gap < 1e-5 || iter >= max_iter
                 break
             end
             
+            # Add cuts for each circuit and scenario
             for icircuit in 1:study.circuits.size
-                push!(circuits_beta1[icircuit], 2 * study.circuits.resistance[icircuit] .* value.(flow[icircuit,hour]))
-                push!(circuits_beta0[icircuit], calc_losses[icircuit] .- circuits_beta1[icircuit][end] * value.(flow[icircuit,hour]))
+                for iscenario in 1:study.scenarios
+                    push!(circuits_beta1[icircuit][iscenario], 2 * study.circuits.resistance[icircuit] * value.(flow[icircuit,hour,iscenario]))
+                    push!(circuits_beta0[icircuit][iscenario], calc_losses[icircuit, iscenario] - circuits_beta1[icircuit][iscenario][end] * value.(flow[icircuit,hour,iscenario]))
+                    @constraint(m, 
+                        losses[icircuit,hour,iscenario] >= circuits_beta0[icircuit][iscenario][end] + circuits_beta1[icircuit][iscenario][end] * flow[icircuit,hour,iscenario]
+                    )
+                end
             end
-            @constraint(m, [icircuit=1:study.circuits.size],
-                losses[icircuit,hour] >= circuits_beta0[icircuit][end] + circuits_beta1[icircuit][end] * flow[icircuit,hour]
-            )
         end
 
         println("Iteration count: ", iter)
-        println("Losses linearization gap: ", maximum(abs.(calc_losses .- value.(losses[:,hour]))))
+        println("Losses linearization gap: ", maximum(abs.(calc_losses .- value.(losses[:,hour,:]))))
     end
     
     println("Model solved successfully!")
