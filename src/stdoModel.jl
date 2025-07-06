@@ -55,6 +55,13 @@ function StdoBuildConstraints!(m, study::StdoStudy)
             @constraint(m, flow[icircuit,1:study.hours,1:study.scenarios] .>= -study.circuits.capacity[icircuit] * x[icircuit, 1:study.hours, 1:study.scenarios])
         end
     end
+
+    # Radiality constraint
+    @constraint(m, [ihour=1:study.hours, iscenario=1:study.scenarios],
+        sum(x[icircuit, ihour, iscenario] for icircuit in 1:study.circuits.size if study.circuits.type[icircuit] == "switch")
+        ==
+        study.buses.size - 1 - sum(study.circuits.type[icircuit] != "switch" for icircuit in 1:study.circuits.size)
+    )
     
     return m
 end
