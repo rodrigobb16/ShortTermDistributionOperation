@@ -5,7 +5,7 @@ function StdoBuildVariables!(m, study::StdoStudy)
     @variable(m, powerConsumption[1:study.buses.size,1:study.hours,1:study.scenarios])
     @variable(m, 0 <= deficit[1:study.buses.size,1:study.hours,1:study.scenarios])
     @variable(m, x[1:study.circuits.size, 1:study.hours, 1:study.scenarios], Bin)
-    @variable(m, batStorage[1:study.batteries.size, 1:study.hours, 1:study.scenarios])
+    @variable(m, 0 <= batStorage[1:study.batteries.size, 1:study.hours, 1:study.scenarios])
     @variable(m, powerBat[1:study.batteries.size, 1:study.hours, 1:study.scenarios])
 end
 
