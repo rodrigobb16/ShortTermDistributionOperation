@@ -68,6 +68,26 @@ function StdoLoadLoads(loads_filepath::String, buses::StdoBuses, base_power::Flo
                      power::Vector{Float64});
 end
 
+function StdoLoadBatteries(batteries_filepath::String, buses::StdoBuses, base_power::Float64, base_voltage::Float64)
+    batteries_input_df = DataFrame(CSV.File(batteries_filepath));
+    df_size = size(batteries_input_df, 1);
+    code = batteries_input_df.code;
+    busCode = batteries_input_df.bus;
+    capacity = Float64.(batteries_input_df.bat_cap_KW) / base_power; # to pu
+    initial_charge = Float64.(batteries_input_df.initial_charge_KW) / base_power; # to pu
+    
+    battery2bus = Int[];
+    for i in 1:df_size
+        battery2bus = push!(battery2bus, findfirst(buses.code .== busCode[i]));
+    end
+
+    return StdoBatteries(df_size::Int, 
+                         code::Vector{Int}, 
+                         battery2bus::Vector{Int},
+                         initial_charge::Vector{Float64},
+                         capacity::Vector{Float64});
+end
+
 function StdoLoadGenerators(generators_filepath::String, buses::StdoBuses, base_power::Float64, base_voltage::Float64)
     generators_input_df = DataFrame(CSV.File(generators_filepath));
     df_size = size(generators_input_df, 1);
@@ -136,6 +156,7 @@ function StdoLoadStudy(casepath::String)
     loads = StdoLoadLoads(joinpath(casepath, "load_info.csv"), buses, base_power, base_voltage);
     substations = StdoLoadGenerators(joinpath(casepath, "substation_info.csv"), buses, base_power, base_voltage);
     renewables, scn, hor = StdoLoadRenewables(joinpath(casepath, "GD_info.csv"), buses, base_power, base_voltage);
+    batteries = StdoLoadBatteries(joinpath(casepath, "BAT_info.csv"), buses, base_power, base_voltage);
     return StdoStudy(
         scn,
         hor,
@@ -146,6 +167,7 @@ function StdoLoadStudy(casepath::String)
         loads::StdoLoads,
         substations::StdoGenerators,
         renewables::StdoRenewable,
+        batteries::StdoBatteries
         );
 end
 

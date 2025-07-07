@@ -29,6 +29,15 @@ mutable struct StdoLoads
     power::Vector{Float64}
 end
 
+mutable struct StdoBatteries
+    size::Int
+    # id::Vector{Int}
+    code::Vector{Int}
+    battery2bus::Vector{Int}
+    initial_charge::Vector{Float64}
+    capacity::Vector{Float64}
+end
+
 mutable struct StdoGenerators
     size::Int
     # id::Vector{Int}
@@ -55,4 +64,5 @@ mutable struct StdoStudy
     loads::StdoLoads
     generators::StdoGenerators
     renewables::StdoRenewable
+    batteries::StdoBatteries
 end

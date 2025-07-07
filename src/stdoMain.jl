@@ -31,6 +31,7 @@ function main(casepath::String)
             iter += 1
             println("Iteration $iter...")
             write_to_file(m, "stdo.lp")
+            set_silent(m)
             optimize!(m)
             
             # Calculate losses for each scenario

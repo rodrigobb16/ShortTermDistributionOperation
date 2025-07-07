@@ -5,6 +5,8 @@ function StdoBuildVariables!(m, study::StdoStudy)
     @variable(m, powerConsumption[1:study.buses.size,1:study.hours,1:study.scenarios])
     @variable(m, 0 <= deficit[1:study.buses.size,1:study.hours,1:study.scenarios])
     @variable(m, x[1:study.circuits.size, 1:study.hours, 1:study.scenarios], Bin)
+    @variable(m, batStorage[1:study.batteries.size, 1:study.hours, 1:study.scenarios])
+    @variable(m, powerBat[1:study.batteries.size, 1:study.hours, 1:study.scenarios])
 end
 
 function StdoBuildObjectiveFunction!(m, study::StdoStudy)
@@ -18,7 +20,8 @@ function StdoBuildObjectiveFunction!(m, study::StdoStudy)
     scenario_probability = 1.0 / study.scenarios
     @objective(m, Min, 
         sum(scenario_probability * losses[icircuit,ihour,iscenario] for icircuit in 1:study.circuits.size, ihour in 1:study.hours, iscenario in 1:study.scenarios) + 
-        sum(scenario_probability * penalty_deficit * deficit[ibus,ihour,iscenario] for ibus in 1:study.buses.size, ihour in 1:study.hours, iscenario in 1:study.scenarios)
+        sum(scenario_probability * penalty_deficit * deficit[ibus,ihour,iscenario] for ibus in 1:study.buses.size, ihour in 1:study.hours, iscenario in 1:study.scenarios) +
+        sum(powerSupply[ibus,ihour] for ibus in 1:study.buses.size, ihour in 1:study.hours)
     )
 end
 
@@ -28,7 +31,10 @@ function StdoBuildConstraints!(m, study::StdoStudy)
     powerSupply = m[:powerSupply]
     powerConsumption = m[:powerConsumption]
     deficit = m[:deficit]
-    losses = m[:losses]    
+    losses = m[:losses]
+    powerBat = m[:powerBat]
+    batStorage = m[:batStorage]
+    x = m[:x]
 
     @constraint(m, node_balance[ibus=1:study.buses.size, ihour=1:study.hours, iscenario=1:study.scenarios],
         sum(flow[icircuit,ihour,iscenario] for icircuit in 1:study.circuits.size if study.circuits.busTo[icircuit] == ibus) - 
@@ -38,8 +44,10 @@ function StdoBuildConstraints!(m, study::StdoStudy)
     )
 
     @constraint(m, demand_supply[ibus=1:study.buses.size, ihour=1:study.hours, iscenario=1:study.scenarios],
-        powerConsumption[ibus,ihour,iscenario] + deficit[ibus,ihour,iscenario] == sum(study.loads.power[iload] for iload in 1:study.loads.size if study.loads.load2bus[iload] == ibus) - 
-        sum(study.renewables.power[igenerator][iscenario][ihour] for igenerator in 1:study.renewables.size if study.renewables.gen2bus[igenerator] == ibus)
+        powerConsumption[ibus,ihour,iscenario] + deficit[ibus,ihour,iscenario] == 
+        sum(study.loads.power[iload] for iload in 1:study.loads.size if study.loads.load2bus[iload] == ibus) - 
+        sum(study.renewables.power[igenerator][iscenario][ihour] for igenerator in 1:study.renewables.size if study.renewables.gen2bus[igenerator] == ibus) -
+        sum(powerBat[ibattery, ihour, iscenario] for ibattery in 1:study.batteries.size if study.batteries.battery2bus[ibattery] == ibus)
     )
 
     @constraint(m, max_power_supply[ibus=1:study.buses.size, ihour=1:study.hours],
@@ -61,6 +69,14 @@ function StdoBuildConstraints!(m, study::StdoStudy)
         sum(x[icircuit, ihour, iscenario] for icircuit in 1:study.circuits.size if study.circuits.type[icircuit] == "switch")
         ==
         study.buses.size - 1 - sum(study.circuits.type[icircuit] != "switch" for icircuit in 1:study.circuits.size)
+    )
+
+    # Battery storage constraints
+    @constraint(m, [ibattery=1:study.batteries.size, ihour=1, iscenario=1:study.scenarios],
+        batStorage[ibattery, ihour, iscenario] == study.batteries.initial_charge[ibattery] - powerBat[ibattery, ihour, iscenario]
+    )
+    @constraint(m, [ibattery=1:study.batteries.size, ihour=2:study.hours, iscenario=1:study.scenarios],
+        batStorage[ibattery, ihour, iscenario] == batStorage[ibattery, ihour-1, iscenario] - powerBat[ibattery, ihour, iscenario]
     )
     
     return m

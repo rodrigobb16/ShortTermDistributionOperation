@@ -1,0 +1,8 @@
+code,bus,bat_cap_KW,initial_charge_KW,car
+1,20,31.8,31.8,BYD Dolphin Mini
+2,8,131.4,131.4,Ford F-150 Lightning
+3,44,75,75,Tesla Model 3
+4,46,82.5,82.5,BYD Seal
+5,105,131.4,131.4,Ford F-150 Lightning
+6,92,31.8,31.8,BYD Dolphin Mini
+7,70,82.5,82.5,BYD Seal
