@@ -157,6 +157,7 @@ function StdoLoadStudy(casepath::String)
     substations = StdoLoadGenerators(joinpath(casepath, "substation_info.csv"), buses, base_power, base_voltage);
     renewables, scn, hor = StdoLoadRenewables(joinpath(casepath, "GD_info.csv"), buses, base_power, base_voltage);
     batteries = StdoLoadBatteries(joinpath(casepath, "BAT_info.csv"), buses, base_power, base_voltage);
+    # scn = 1;
     return StdoStudy(
         scn,
         hor,
@@ -177,19 +178,23 @@ function StdoSaveResults(casepath::String, m, study::StdoStudy)
     powerSupply = m[:powerSupply]
     powerConsumption = m[:powerConsumption]
     deficit = m[:deficit]
-    losses = m[:losses]   
+    losses = m[:losses]
+    powerBat = m[:powerBat]
+    batStorage = m[:batStorage]
 
     # Create a DataFrame to store the results
 
     losses_results = DataFrame(
         circuit_code = Int[],
         hour = Int[],
+        scen = Int[],
         losses = Float64[],
     )
 
     flow_results = DataFrame(
         circuit_code = Int[],
         hour = Int[],
+        scen = Int[],
         flow = Float64[],
     )
 
@@ -202,6 +207,7 @@ function StdoSaveResults(casepath::String, m, study::StdoStudy)
     powerConsumption_results = DataFrame(
         bus_code = Int[],
         hour = Int[],
+        scen = Int[],
         powerConsumption = Float64[],
     )
 
@@ -212,24 +218,48 @@ function StdoSaveResults(casepath::String, m, study::StdoStudy)
         deficit = Float64[],
     )
 
+    bat_storage_results = DataFrame(
+        bus_code = Int[],
+        hour = Int[],
+        scen = Int[],
+        batStorage = Float64[],
+    )
+
+    power_bat_results = DataFrame(
+        bus_code = Int[],
+        hour = Int[],
+        scen = Int[],
+        powerBat = Float64[],
+    )
     # Fill the DataFrame with the results
     for icircuit in 1:study.circuits.size
         for ihour in 1:study.hours
-            push!(losses_results, (circuit_code = study.circuits.code[icircuit], hour = ihour, losses = value(losses[icircuit,ihour])))
-            push!(flow_results, (circuit_code = study.circuits.code[icircuit], hour = ihour, flow = value(flow[icircuit,ihour])))
+            for iscenario in 1:study.scenarios
+                push!(losses_results, (circuit_code = study.circuits.code[icircuit], hour = ihour, scen = iscenario, losses = value(losses[icircuit,ihour,iscenario])))
+                push!(flow_results, (circuit_code = study.circuits.code[icircuit], hour = ihour, scen = iscenario, flow = value(flow[icircuit,ihour,iscenario])))
+            end
         end
     end
 
     for ibus in 1:study.buses.size
         for ihour in 1:study.hours
             push!(powerSupply_results, (bus_code = study.buses.code[ibus], hour = ihour, powerSupply = value(powerSupply[ibus,ihour])))
-            push!(powerConsumption_results, (bus_code = study.buses.code[ibus], hour = ihour, powerConsumption = value(powerConsumption[ibus,ihour])))
             for iscenario in 1:study.scenarios
+                push!(powerConsumption_results, (bus_code = study.buses.code[ibus], hour = ihour, scen = iscenario, powerConsumption = value(powerConsumption[ibus,ihour,iscenario])))
                 push!(deficit_results, (bus_code = study.buses.code[ibus], hour = ihour, scen = iscenario, deficit = value(deficit[ibus,ihour,iscenario])))
             end
         end
     end
 
+    for ibattery in 1:study.batteries.size
+        for ihour in 1:study.hours
+            for iscenario in 1:study.scenarios
+                push!(bat_storage_results, (bus_code = study.batteries.code[ibattery], hour = ihour, scen = iscenario, batStorage = value(batStorage[ibattery,ihour,iscenario])))
+                push!(power_bat_results, (bus_code = study.batteries.code[ibattery], hour = ihour, scen = iscenario, powerBat = value(powerBat[ibattery,ihour,iscenario])))
+            end
+        end
+    end
+    
     # Save the DataFrame to a CSV file
     output_filepath = joinpath(casepath, "outputs")
     if !isdir(output_filepath)
@@ -243,6 +273,12 @@ function StdoSaveResults(casepath::String, m, study::StdoStudy)
 
     powerSupply_filepath = joinpath(output_filepath, "powerSupply.csv")
     CSV.write(powerSupply_filepath, powerSupply_results)
+
+    batStorage_filepath = joinpath(output_filepath, "batStorage.csv")
+    CSV.write(batStorage_filepath, bat_storage_results)
+
+    powerBat_filepath = joinpath(output_filepath, "powerBat.csv")
+    CSV.write(powerBat_filepath, power_bat_results)
 
     powerConsumption_filepath = joinpath(output_filepath, "powerConsumption.csv")
     CSV.write(powerConsumption_filepath, powerConsumption_results)

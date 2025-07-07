@@ -4,7 +4,8 @@ module ShortTermDistributionOperation
   using DataFrames
   using Dates
   using JuMP
-  using HiGHS
+  # using HiGHS
+  using XpressPSR
 
   include("stdoMain.jl")
   include("stdoClasses.jl")
