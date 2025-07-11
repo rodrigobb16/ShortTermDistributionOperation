@@ -2,6 +2,7 @@ function StdoBuildVariables!(m, study::StdoStudy)
     @variable(m, 0 <= losses[1:study.circuits.size,1:study.hours,1:study.scenarios])
     @variable(m, flow[1:study.circuits.size,1:study.hours,1:study.scenarios])
     @variable(m, 0 <= powerSupply[1:study.buses.size,1:study.hours])
+    @variable(m, 0 <= powerSupply2Nivel[1:study.buses.size,1:study.hours,1:study.scenarios])
     @variable(m, powerConsumption[1:study.buses.size,1:study.hours,1:study.scenarios])
     @variable(m, 0 <= deficit[1:study.buses.size,1:study.hours,1:study.scenarios])
     @variable(m, x[1:study.circuits.size, 1:study.hours, 1:study.scenarios], Bin)
@@ -13,15 +14,18 @@ function StdoBuildObjectiveFunction!(m, study::StdoStudy)
     losses = m[:losses]
     flow = m[:flow]
     powerSupply = m[:powerSupply]
+    powerSupply2Nivel = m[:powerSupply2Nivel]
     powerConsumption = m[:powerConsumption]
     deficit = m[:deficit]
 
     penalty_deficit = 1e6 # penalty for deficit
     scenario_probability = 1.0 / study.scenarios
     @objective(m, Min, 
-        sum(scenario_probability * losses[icircuit,ihour,iscenario] for icircuit in 1:study.circuits.size, ihour in 1:study.hours, iscenario in 1:study.scenarios) + 
+        # sum(scenario_probability * losses[icircuit,ihour,iscenario] for icircuit in 1:study.circuits.size, ihour in 1:study.hours, iscenario in 1:study.scenarios) + 
         sum(scenario_probability * penalty_deficit * deficit[ibus,ihour,iscenario] for ibus in 1:study.buses.size, ihour in 1:study.hours, iscenario in 1:study.scenarios) +
-        sum(powerSupply[ibus,ihour] for ibus in 1:study.buses.size, ihour in 1:study.hours)
+        sum(study.contrato[ihour] * powerSupply[ibus,ihour] for ibus in 1:study.buses.size, ihour in 1:study.hours) +
+        sum(study.pld[ihour] * powerSupply2Nivel[ibus,ihour,iscenario] for ibus in 1:study.buses.size, ihour in 1:study.hours, iscenario in 1:study.scenarios)
+
     )
 end
 
@@ -30,6 +34,7 @@ function StdoBuildConstraints!(m, study::StdoStudy)
     flow = m[:flow]
     powerSupply = m[:powerSupply]
     powerConsumption = m[:powerConsumption]
+    powerSupply2Nivel = m[:powerSupply2Nivel]
     deficit = m[:deficit]
     losses = m[:losses]
     powerBat = m[:powerBat]
@@ -40,7 +45,7 @@ function StdoBuildConstraints!(m, study::StdoStudy)
         sum(flow[icircuit,ihour,iscenario] for icircuit in 1:study.circuits.size if study.circuits.busTo[icircuit] == ibus) - 
         sum(flow[icircuit,ihour,iscenario] for icircuit in 1:study.circuits.size if study.circuits.busFrom[icircuit] == ibus) -
         sum(losses[icircuit,ihour,iscenario] for icircuit in 1:study.circuits.size if study.circuits.busTo[icircuit] == ibus) +
-        powerSupply[ibus,ihour] - powerConsumption[ibus,ihour,iscenario] == 0
+        powerSupply[ibus,ihour] + powerSupply2Nivel[ibus,ihour,iscenario] - powerConsumption[ibus,ihour,iscenario] == 0
     )
 
     @constraint(m, demand_supply[ibus=1:study.buses.size, ihour=1:study.hours, iscenario=1:study.scenarios],
@@ -52,6 +57,10 @@ function StdoBuildConstraints!(m, study::StdoStudy)
 
     @constraint(m, max_power_supply[ibus=1:study.buses.size, ihour=1:study.hours],
         powerSupply[ibus,ihour] <= sum(study.generators.power[igenerator] for igenerator in 1:study.generators.size if study.generators.gen2bus[igenerator] == ibus)
+    )
+
+    @constraint(m, max_power_supply2Nivel[ibus=1:study.buses.size, ihour=1:study.hours, iscenario=1:study.scenarios],
+        powerSupply2Nivel[ibus,ihour,iscenario] <= sum(study.generators.power[igenerator] for igenerator in 1:study.generators.size if study.generators.gen2bus[igenerator] == ibus)
     )
 
     for icircuit in 1:study.circuits.size

@@ -65,4 +65,6 @@ mutable struct StdoStudy
     generators::StdoGenerators
     renewables::StdoRenewable
     batteries::StdoBatteries
+    pld::Vector{Float64}
+    contrato::Vector{Float64}
 end

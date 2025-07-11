@@ -6,6 +6,7 @@ module ShortTermDistributionOperation
   using JuMP
   # using HiGHS
   using XpressPSR
+  using Statistics
 
   include("stdoMain.jl")
   include("stdoClasses.jl")

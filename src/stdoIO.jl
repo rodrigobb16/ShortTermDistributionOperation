@@ -146,6 +146,27 @@ function StdoLoadRenewables(renewables_filepath::String, buses::StdoBuses, base_
                          gen2bus::Vector{Int}, 
                          power::Vector{Dict{Int,Vector{Float64}}}), scn, hor;
 end
+
+function StdoPLD(pld_filepath::String, base_power::Float64)
+    pld_input_df = DataFrame(CSV.File(pld_filepath))
+
+    pld_MWh = Float64.(pld_input_df.PLD_REAL_MWh)
+    # Convertendo de R$/MWh para R$/pu (base_power em kW)
+    pld_pu = pld_MWh .* base_power ./ 1000.0
+
+    return pld_pu
+end
+
+function StdoCONTRATO(contrato_filepath::String, base_power::Float64)
+    contrato_input_df = DataFrame(CSV.File(contrato_filepath))
+
+    contrato_MWh = Float64.(contrato_input_df.CONTRATO_REAL_MWh)
+    # Convertendo de R$/MWh para R$/pu (base_power em kW)
+    contrato_pu = contrato_MWh .* base_power ./ 1000.0
+
+    return contrato_pu
+end
+
 function StdoLoadStudy(casepath::String)
 
     base_power = 1000.0; # kVA
@@ -157,7 +178,9 @@ function StdoLoadStudy(casepath::String)
     substations = StdoLoadGenerators(joinpath(casepath, "substation_info.csv"), buses, base_power, base_voltage);
     renewables, scn, hor = StdoLoadRenewables(joinpath(casepath, "GD_info.csv"), buses, base_power, base_voltage);
     batteries = StdoLoadBatteries(joinpath(casepath, "BAT_info.csv"), buses, base_power, base_voltage);
-    # scn = 1;
+    pld = StdoPLD(joinpath(casepath, "PLD_info.csv"), base_power);
+    contrato = StdoCONTRATO(joinpath(casepath, "CONT_info.csv"), base_power);
+    # scn = 5;
     return StdoStudy(
         scn,
         hor,
@@ -168,14 +191,18 @@ function StdoLoadStudy(casepath::String)
         loads::StdoLoads,
         substations::StdoGenerators,
         renewables::StdoRenewable,
-        batteries::StdoBatteries
-        );
+        batteries::StdoBatteries,
+        pld::Vector{Float64},
+        contrato::Vector{Float64}
+    );
 end
 
 function StdoSaveResults(casepath::String, m, study::StdoStudy)
     
     flow = m[:flow]
     powerSupply = m[:powerSupply]
+    powerSupply2Nivel = m[:powerSupply2Nivel]
+    x = m[:x]
     powerConsumption = m[:powerConsumption]
     deficit = m[:deficit]
     losses = m[:losses]
@@ -191,6 +218,14 @@ function StdoSaveResults(casepath::String, m, study::StdoStudy)
         losses = Float64[],
     )
 
+    x_results = DataFrame(
+        circuit_code = Int[],
+        hour = Int[],
+        scen = Int[],
+        x = Int[],
+    )
+
+
     flow_results = DataFrame(
         circuit_code = Int[],
         hour = Int[],
@@ -202,6 +237,13 @@ function StdoSaveResults(casepath::String, m, study::StdoStudy)
         bus_code = Int[],
         hour = Int[],
         powerSupply = Float64[],
+    )
+
+    powerSupply2Nivel_results = DataFrame(
+        bus_code = Int[],
+        hour = Int[],
+        scen = Int[],
+        powerSupply2Nivel = Float64[],
     )
 
     powerConsumption_results = DataFrame(
@@ -235,6 +277,7 @@ function StdoSaveResults(casepath::String, m, study::StdoStudy)
     for icircuit in 1:study.circuits.size
         for ihour in 1:study.hours
             for iscenario in 1:study.scenarios
+                push!(x_results, (circuit_code = study.circuits.code[icircuit], hour = ihour, scen = iscenario, x = value(x[icircuit,ihour,iscenario])))
                 push!(losses_results, (circuit_code = study.circuits.code[icircuit], hour = ihour, scen = iscenario, losses = value(losses[icircuit,ihour,iscenario])))
                 push!(flow_results, (circuit_code = study.circuits.code[icircuit], hour = ihour, scen = iscenario, flow = value(flow[icircuit,ihour,iscenario])))
             end
@@ -245,6 +288,7 @@ function StdoSaveResults(casepath::String, m, study::StdoStudy)
         for ihour in 1:study.hours
             push!(powerSupply_results, (bus_code = study.buses.code[ibus], hour = ihour, powerSupply = value(powerSupply[ibus,ihour])))
             for iscenario in 1:study.scenarios
+                push!(powerSupply2Nivel_results, (bus_code = study.buses.code[ibus], hour = ihour, scen = iscenario, powerSupply2Nivel = value(powerSupply2Nivel[ibus,ihour,iscenario])))
                 push!(powerConsumption_results, (bus_code = study.buses.code[ibus], hour = ihour, scen = iscenario, powerConsumption = value(powerConsumption[ibus,ihour,iscenario])))
                 push!(deficit_results, (bus_code = study.buses.code[ibus], hour = ihour, scen = iscenario, deficit = value(deficit[ibus,ihour,iscenario])))
             end
@@ -282,6 +326,12 @@ function StdoSaveResults(casepath::String, m, study::StdoStudy)
 
     powerConsumption_filepath = joinpath(output_filepath, "powerConsumption.csv")
     CSV.write(powerConsumption_filepath, powerConsumption_results)
+
+    x_filepath = joinpath(output_filepath, "x.csv")
+    CSV.write(x_filepath, x_results)
+
+    powerSupply2Nivel_filepath = joinpath(output_filepath, "powerSupply2Nivel.csv")
+    CSV.write(powerSupply2Nivel_filepath, powerSupply2Nivel_results)
 
     deficit_filepath = joinpath(output_filepath, "deficit.csv")
     CSV.write(deficit_filepath, deficit_results)
