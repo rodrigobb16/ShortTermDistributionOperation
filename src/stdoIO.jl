@@ -180,7 +180,7 @@ function StdoLoadStudy(casepath::String)
     batteries = StdoLoadBatteries(joinpath(casepath, "BAT_info.csv"), buses, base_power, base_voltage);
     pld = StdoPLD(joinpath(casepath, "PLD_info.csv"), base_power);
     contrato = StdoCONTRATO(joinpath(casepath, "CONT_info.csv"), base_power);
-    scn = 1;
+    # scn = 1;
     return StdoStudy(
         scn,
         hor,
