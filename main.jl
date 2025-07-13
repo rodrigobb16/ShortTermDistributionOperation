@@ -4,4 +4,4 @@ import ShortTermDistributionOperation as STDO
 import Pkg
 Pkg.instantiate()
 
-STDO.main(ARGS[1])
+STDO.main("D:\\projeto_modelagem_puc\\cases\\feeder123\\data_base")

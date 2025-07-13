@@ -1,0 +1,2 @@
+Objective value: 6398.902499031858
+8.287412 seconds (2.69 M allocations: 179.443 MiB, 0.44% gc time, 16.46% compilation time)
